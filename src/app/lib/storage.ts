@@ -184,6 +184,24 @@ export const addBulkAttendance = (
   localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(allRecords));
 };
 
+export const updateAttendanceRecord = (
+  id: string,
+  updates: Partial<AttendanceRecord>
+): void => {
+  const records = getAttendanceRecords();
+  const index = records.findIndex((r) => r.id === id);
+  if (index !== -1) {
+    records[index] = { ...records[index], ...updates };
+    localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(records));
+  }
+};
+
+export const deleteAttendanceRecord = (id: string): void => {
+  const records = getAttendanceRecords();
+  const filtered = records.filter((r) => r.id !== id);
+  localStorage.setItem(STORAGE_KEYS.ATTENDANCE, JSON.stringify(filtered));
+};
+
 // Sessions
 export const getSessions = (): AttendanceSession[] => {
   const stored = localStorage.getItem(STORAGE_KEYS.SESSIONS);

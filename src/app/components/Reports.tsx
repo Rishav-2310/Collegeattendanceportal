@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { BarChart3, Download, TrendingUp } from "lucide-react";
+import { BarChart3, Download, TrendingUp, Edit } from "lucide-react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import {
@@ -26,17 +26,33 @@ import {
 } from "recharts";
 import { getStudents, getAttendanceRecords, getStudentAttendancePercentage } from "../lib/storage";
 import { Student, AttendanceRecord } from "../types";
+import { EditAttendanceDialog } from "./EditAttendanceDialog";
 
 export function Reports() {
   const [students, setStudents] = useState<Student[]>([]);
   const [records, setRecords] = useState<AttendanceRecord[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState("all");
   const [selectedSemester, setSelectedSemester] = useState("all");
-  
-  useEffect(() => {
+  const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  const loadData = () => {
     setStudents(getStudents());
     setRecords(getAttendanceRecords());
+  };
+
+  useEffect(() => {
+    loadData();
   }, []);
+
+  const handleEditClick = (record: AttendanceRecord) => {
+    setEditingRecord(record);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateComplete = () => {
+    loadData();
+  };
   
   const filteredStudents = students.filter((s) => {
     const matchesDept = selectedDepartment === "all" || s.department === selectedDepartment;
@@ -48,18 +64,19 @@ export function Reports() {
   const semesters = Array.from(new Set(students.map((s) => s.semester))).sort();
   
   // Department-wise attendance data
-  const departmentData = departments.map((dept) => {
+  const departmentData = departments.map((dept, index) => {
     const deptStudents = students.filter((s) => s.department === dept);
     const deptRecords = records.filter((r) =>
       deptStudents.some((s) => s.id === r.studentId)
     );
-    
+
     const present = deptRecords.filter((r) => r.status === "present").length;
     const absent = deptRecords.filter((r) => r.status === "absent").length;
     const late = deptRecords.filter((r) => r.status === "late").length;
-    
+
     return {
-      department: dept,
+      id: `dept-${index}`,
+      department: dept || "Unknown",
       Present: present,
       Absent: absent,
       Late: late,
@@ -69,16 +86,19 @@ export function Reports() {
   // Overall status distribution
   const statusData = [
     {
+      id: "status-present",
       name: "Present",
       value: records.filter((r) => r.status === "present").length,
       color: "#10b981",
     },
     {
+      id: "status-absent",
       name: "Absent",
       value: records.filter((r) => r.status === "absent").length,
       color: "#ef4444",
     },
     {
+      id: "status-late",
       name: "Late",
       value: records.filter((r) => r.status === "late").length,
       color: "#f59e0b",
@@ -91,13 +111,14 @@ export function Reports() {
     date.setDate(date.getDate() - (6 - i));
     return date.toISOString().split("T")[0];
   });
-  
-  const dailyTrendData = last7Days.map((date) => {
+
+  const dailyTrendData = last7Days.map((date, index) => {
     const dayRecords = records.filter((r) => r.date === date);
     const present = dayRecords.filter((r) => r.status === "present").length;
     const absent = dayRecords.filter((r) => r.status === "absent").length;
-    
+
     return {
+      id: `day-${index}`,
       date: new Date(date).toLocaleDateString("en-US", { month: "short", day: "numeric" }),
       Present: present,
       Absent: absent,
@@ -180,9 +201,9 @@ export function Reports() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Bar dataKey="Present" fill="#10b981" />
-              <Bar dataKey="Absent" fill="#ef4444" />
-              <Bar dataKey="Late" fill="#f59e0b" />
+              <Bar dataKey="Present" fill="#10b981" key="bar-present" />
+              <Bar dataKey="Absent" fill="#ef4444" key="bar-absent" />
+              <Bar dataKey="Late" fill="#f59e0b" key="bar-late" />
             </BarChart>
           </ResponsiveContainer>
         </Card>
@@ -202,8 +223,8 @@ export function Reports() {
                 fill="#8884d8"
                 dataKey="value"
               >
-                {statusData.map((entry, index) => (
-                  <Cell key={`cell-${index}`} fill={entry.color} />
+                {statusData.map((entry) => (
+                  <Cell key={entry.id} fill={entry.color} />
                 ))}
               </Pie>
               <Tooltip />
@@ -225,8 +246,8 @@ export function Reports() {
             <YAxis />
             <Tooltip />
             <Legend />
-            <Line type="monotone" dataKey="Present" stroke="#10b981" strokeWidth={2} />
-            <Line type="monotone" dataKey="Absent" stroke="#ef4444" strokeWidth={2} />
+            <Line type="monotone" dataKey="Present" stroke="#10b981" strokeWidth={2} key="line-present" />
+            <Line type="monotone" dataKey="Absent" stroke="#ef4444" strokeWidth={2} key="line-absent" />
           </LineChart>
         </ResponsiveContainer>
       </Card>
@@ -308,6 +329,96 @@ export function Reports() {
           )}
         </div>
       </Card>
+
+      {/* All Attendance Records */}
+      <Card className="p-6 mt-6">
+        <h2 className="text-xl font-bold text-gray-900 mb-4">All Attendance Records</h2>
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead className="bg-gray-50 border-b border-gray-200">
+              <tr>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Date
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Student
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Roll Number
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Subject
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Status
+                </th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody className="bg-white divide-y divide-gray-200">
+              {records
+                .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+                .slice(0, 50)
+                .map((record) => {
+                  const student = students.find((s) => s.id === record.studentId);
+                  return (
+                    <tr key={record.id} className="hover:bg-gray-50">
+                      <td className="px-4 py-3 text-sm text-gray-900">
+                        {new Date(record.date).toLocaleDateString()}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900">
+                        {student ? `${student.firstName} ${student.lastName}` : "Unknown"}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-500">
+                        {student?.rollNumber || "-"}
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-900">
+                        {record.subject || "-"}
+                      </td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`px-3 py-1 rounded-full text-xs font-medium ${
+                            record.status === "present"
+                              ? "bg-green-100 text-green-700"
+                              : record.status === "late"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : "bg-red-100 text-red-700"
+                          }`}
+                        >
+                          {record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                        </span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleEditClick(record)}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                      </td>
+                    </tr>
+                  );
+                })}
+            </tbody>
+          </table>
+
+          {records.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No attendance records yet</p>
+            </div>
+          )}
+        </div>
+      </Card>
+
+      <EditAttendanceDialog
+        record={editingRecord}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onUpdate={handleUpdateComplete}
+      />
     </div>
   );
 }

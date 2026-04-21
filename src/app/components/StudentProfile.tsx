@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router";
-import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, Hash } from "lucide-react";
+import { ArrowLeft, Mail, Phone, Calendar, GraduationCap, Hash, Edit } from "lucide-react";
 import { Card } from "./ui/card";
 import { Button } from "./ui/button";
 import { getStudent, getStudentAttendance, getStudentAttendancePercentage } from "../lib/storage";
 import { Student, AttendanceRecord } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import { EditAttendanceDialog } from "./EditAttendanceDialog";
 
 export function StudentProfile() {
   const { id } = useParams<{ id: string }>();
@@ -13,9 +14,10 @@ export function StudentProfile() {
   const [student, setStudent] = useState<Student | null>(null);
   const [attendance, setAttendance] = useState<AttendanceRecord[]>([]);
   const [attendancePercentage, setAttendancePercentage] = useState(0);
+  const [editingRecord, setEditingRecord] = useState<AttendanceRecord | null>(null);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
 
-  useEffect(() => {
-    // If student role, use their own ID; otherwise use the ID from params
+  const loadAttendanceData = () => {
     const studentId = user?.role === "student" ? user.studentId : id;
 
     if (studentId) {
@@ -29,7 +31,20 @@ export function StudentProfile() {
 
       setAttendancePercentage(getStudentAttendancePercentage(studentId));
     }
+  };
+
+  useEffect(() => {
+    loadAttendanceData();
   }, [id, user]);
+
+  const handleEditClick = (record: AttendanceRecord) => {
+    setEditingRecord(record);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateComplete = () => {
+    loadAttendanceData();
+  };
   
   if (!student) {
     return (
@@ -178,6 +193,11 @@ export function StudentProfile() {
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
                         Remarks
                       </th>
+                      {(user?.role === "admin" || user?.role === "faculty") && (
+                        <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+                          Actions
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
@@ -208,6 +228,17 @@ export function StudentProfile() {
                         <td className="px-4 py-3 text-sm text-gray-500">
                           {record.remarks || "-"}
                         </td>
+                        {(user?.role === "admin" || user?.role === "faculty") && (
+                          <td className="px-4 py-3">
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleEditClick(record)}
+                            >
+                              <Edit className="w-4 h-4" />
+                            </Button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -219,6 +250,13 @@ export function StudentProfile() {
           </Card>
         </div>
       </div>
+
+      <EditAttendanceDialog
+        record={editingRecord}
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        onUpdate={handleUpdateComplete}
+      />
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { Button } from "./ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -82,6 +83,9 @@ export function Students() {
           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
+              <DialogDescription>
+                Fill in the form below to add a new student to the system.
+              </DialogDescription>
             </DialogHeader>
             <StudentForm
               onSuccess={() => {
@@ -232,6 +236,9 @@ export function Students() {
                           <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
                             <DialogHeader>
                               <DialogTitle>Edit Student</DialogTitle>
+                              <DialogDescription>
+                                Update the student information below.
+                              </DialogDescription>
                             </DialogHeader>
                             <StudentForm
                               student={editingStudent}
