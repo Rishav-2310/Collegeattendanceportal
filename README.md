@@ -1,7 +1,7 @@
 
   # College Attendance Portal
 
-  Live Preview:- https://collegeattendanceportal-i1fpm9jdn.vercel.app
+  This is a code bundle for College Attendance Portal. The original project is available at https://www.figma.com/design/UT4cmt3Gi7bOVKChgtLXoq/College-Attendance-Portal.
 
   ## Running the code
 

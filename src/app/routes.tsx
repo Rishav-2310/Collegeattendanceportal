@@ -6,6 +6,7 @@ import { Login } from "./components/Login";
 import { Dashboard } from "./components/Dashboard";
 import { StudentDashboard } from "./components/StudentDashboard";
 import { Students } from "./components/Students";
+import { FacultyManagement } from "./components/FacultyManagement";
 import { StudentProfile } from "./components/StudentProfile";
 import { Attendance } from "./components/Attendance";
 import { Reports } from "./components/Reports";
@@ -81,6 +82,14 @@ export const router = createBrowserRouter([
         element: (
           <ProtectedRoute allowedRoles={["admin"]}>
             <StudentProfile />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: "faculty",
+        element: (
+          <ProtectedRoute allowedRoles={["admin"]}>
+            <FacultyManagement />
           </ProtectedRoute>
         ),
       },

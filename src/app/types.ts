@@ -39,4 +39,17 @@ export interface User {
   role: UserRole;
   department?: string;
   studentId?: string;
+  facultyId?: string;
+}
+
+export interface Faculty {
+  id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  department: string;
+  designation: string;
+  dateOfJoining: string;
+  password: string;
 }

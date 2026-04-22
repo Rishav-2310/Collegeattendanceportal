@@ -134,7 +134,10 @@ export function Login() {
           <div className="mt-3 space-y-1 text-xs text-gray-500">
             <p>Admin: admin@alta.edu / admin123</p>
             <p>Faculty: faculty@alta.edu / faculty123</p>
-            <p>Student: emily.johnson@alta.edu / student123</p>
+            <p>Student: Any student email / student123</p>
+            <p className="text-xs text-gray-400 mt-2">
+              All students can login using their email with password: student123
+            </p>
           </div>
         </div>
       </Card>

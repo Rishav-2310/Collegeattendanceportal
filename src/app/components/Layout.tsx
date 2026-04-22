@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation, useNavigate } from "react-router";
-import { Home, Users, ClipboardList, BarChart3, GraduationCap, LogOut } from "lucide-react";
+import { Home, Users, ClipboardList, BarChart3, GraduationCap, LogOut, UserCog } from "lucide-react";
 import { useAuth } from "../contexts/AuthContext";
 import { Button } from "./ui/button";
 
@@ -11,6 +11,7 @@ export function Layout() {
   const navigation = [
     { name: "Dashboard", href: "/", icon: Home },
     { name: "Students", href: "/students", icon: Users },
+    { name: "Faculty", href: "/faculty", icon: UserCog },
     { name: "Attendance", href: "/attendance", icon: ClipboardList },
     { name: "Reports", href: "/reports", icon: BarChart3 },
   ];

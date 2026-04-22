@@ -1,9 +1,10 @@
-import { Student, AttendanceRecord, AttendanceSession } from "../types";
+import { Student, AttendanceRecord, AttendanceSession, Faculty } from "../types";
 
 const STORAGE_KEYS = {
   STUDENTS: "alta_students",
   ATTENDANCE: "alta_attendance",
   SESSIONS: "alta_sessions",
+  FACULTY: "alta_faculty",
 };
 
 // Initial mock data
@@ -266,7 +267,74 @@ export const getDepartmentStats = () => {
 export const getStudentAttendancePercentage = (studentId: string): number => {
   const records = getStudentAttendance(studentId);
   if (records.length === 0) return 0;
-  
+
   const presentCount = records.filter((r) => r.status === "present").length;
   return (presentCount / records.length) * 100;
+};
+
+// Initial faculty data
+const initialFaculty: Faculty[] = [
+  {
+    id: "faculty1",
+    email: "faculty@alta.edu",
+    firstName: "John",
+    lastName: "Smith",
+    phone: "+1-555-0201",
+    department: "Computer Science",
+    designation: "Professor",
+    dateOfJoining: "2015-08-15",
+    password: "faculty123",
+  },
+  {
+    id: "faculty2",
+    email: "faculty2@alta.edu",
+    firstName: "Sarah",
+    lastName: "Johnson",
+    phone: "+1-555-0202",
+    department: "Electronics",
+    designation: "Associate Professor",
+    dateOfJoining: "2018-01-10",
+    password: "faculty123",
+  },
+];
+
+// Faculty CRUD operations
+export const getFaculty = (): Faculty[] => {
+  const stored = localStorage.getItem(STORAGE_KEYS.FACULTY);
+  if (stored) {
+    return JSON.parse(stored);
+  }
+  localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(initialFaculty));
+  return initialFaculty;
+};
+
+export const getFacultyMember = (id: string): Faculty | undefined => {
+  const faculty = getFaculty();
+  return faculty.find((f) => f.id === id);
+};
+
+export const addFaculty = (facultyMember: Omit<Faculty, "id">): Faculty => {
+  const faculty = getFaculty();
+  const newFaculty = {
+    ...facultyMember,
+    id: "faculty" + Date.now().toString(),
+  };
+  faculty.push(newFaculty);
+  localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(faculty));
+  return newFaculty;
+};
+
+export const updateFaculty = (id: string, updates: Partial<Faculty>): void => {
+  const faculty = getFaculty();
+  const index = faculty.findIndex((f) => f.id === id);
+  if (index !== -1) {
+    faculty[index] = { ...faculty[index], ...updates };
+    localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(faculty));
+  }
+};
+
+export const deleteFaculty = (id: string): void => {
+  const faculty = getFaculty();
+  const filtered = faculty.filter((f) => f.id !== id);
+  localStorage.setItem(STORAGE_KEYS.FACULTY, JSON.stringify(filtered));
 };

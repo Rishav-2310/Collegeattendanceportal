@@ -1,61 +1,62 @@
 import { User } from "../types";
+import { getStudents, getFaculty } from "./storage";
 
 const AUTH_KEY = "alta_auth_user";
 
-// Mock users for demo
-const MOCK_USERS = [
-  {
-    id: "admin1",
-    email: "admin@alta.edu",
-    password: "admin123",
-    name: "Admin User",
-    role: "admin" as const,
-  },
-  {
-    id: "faculty1",
-    email: "faculty@alta.edu",
-    password: "faculty123",
-    name: "Dr. John Smith",
-    role: "faculty" as const,
-    department: "Computer Science",
-  },
-  {
-    id: "faculty2",
-    email: "faculty2@alta.edu",
-    password: "faculty123",
-    name: "Dr. Sarah Johnson",
-    role: "faculty" as const,
-    department: "Electronics",
-  },
-  {
-    id: "1",
-    email: "emily.johnson@alta.edu",
-    password: "student123",
-    name: "Emily Johnson",
-    role: "student" as const,
-    studentId: "1",
-    department: "Computer Science",
-  },
-  {
-    id: "2",
-    email: "michael.chen@alta.edu",
-    password: "student123",
-    name: "Michael Chen",
-    role: "student" as const,
-    studentId: "2",
-    department: "Computer Science",
-  },
-];
+// Admin user
+const ADMIN_USER = {
+  id: "admin1",
+  email: "admin@alta.edu",
+  password: "admin123",
+  name: "Admin User",
+  role: "admin" as const,
+};
+
+// Default password for all students
+const DEFAULT_STUDENT_PASSWORD = "student123";
 
 export const login = (email: string, password: string): User | null => {
-  const user = MOCK_USERS.find(
-    (u) => u.email === email && u.password === password
-  );
-
-  if (user) {
-    const { password: _, ...userWithoutPassword } = user;
+  // Check if admin
+  if (email === ADMIN_USER.email && password === ADMIN_USER.password) {
+    const { password: _, ...userWithoutPassword } = ADMIN_USER;
     localStorage.setItem(AUTH_KEY, JSON.stringify(userWithoutPassword));
     return userWithoutPassword;
+  }
+
+  // Check faculty
+  const faculty = getFaculty();
+  const facultyMember = faculty.find(
+    (f) => f.email === email && f.password === password
+  );
+
+  if (facultyMember) {
+    const user: User = {
+      id: facultyMember.id,
+      email: facultyMember.email,
+      name: `${facultyMember.firstName} ${facultyMember.lastName}`,
+      role: "faculty",
+      department: facultyMember.department,
+      facultyId: facultyMember.id,
+    };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    return user;
+  }
+
+  // Check students
+  const students = getStudents();
+  const student = students.find((s) => s.email === email);
+
+  if (student && password === DEFAULT_STUDENT_PASSWORD) {
+    const user: User = {
+      id: student.id,
+      email: student.email,
+      name: `${student.firstName} ${student.lastName}`,
+      role: "student",
+      department: student.department,
+      studentId: student.id,
+    };
+    localStorage.setItem(AUTH_KEY, JSON.stringify(user));
+    return user;
   }
 
   return null;
