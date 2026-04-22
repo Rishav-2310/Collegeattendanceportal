@@ -1,7 +1,7 @@
 
   # College Attendance Portal
 
-  Live Preview:- collegeattendanceportal-i1fpm9jdn.vercel.app
+  Live Preview:- https://collegeattendanceportal-i1fpm9jdn.vercel.app
 
   ## Running the code
 
