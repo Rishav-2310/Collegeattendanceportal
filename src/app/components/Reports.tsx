@@ -136,22 +136,22 @@ export function Reports() {
     .slice(0, 10);
   
   return (
-    <div className="p-8">
-      <div className="flex justify-between items-center mb-8">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 mb-6 sm:mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
-          <p className="text-gray-500 mt-1">Comprehensive attendance insights</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+          <p className="text-sm sm:text-base text-gray-500 mt-1">Comprehensive attendance insights</p>
         </div>
-        
-        <Button className="flex items-center gap-2">
+
+        <Button className="flex items-center gap-2 w-full sm:w-auto">
           <Download className="w-4 h-4" />
           Export Report
         </Button>
       </div>
       
       {/* Filters */}
-      <Card className="p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <Select value={selectedDepartment} onValueChange={setSelectedDepartment}>
               <SelectTrigger>
@@ -187,9 +187,9 @@ export function Reports() {
       </Card>
       
       {/* Charts Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
         {/* Department-wise Attendance */}
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
             <BarChart3 className="w-5 h-5" />
             Department-wise Attendance
@@ -209,7 +209,7 @@ export function Reports() {
         </Card>
         
         {/* Status Distribution */}
-        <Card className="p-6">
+        <Card className="p-4 sm:p-6">
           <h2 className="text-xl font-bold text-gray-900 mb-4">Overall Status Distribution</h2>
           <ResponsiveContainer width="100%" height={300}>
             <PieChart>
@@ -234,7 +234,7 @@ export function Reports() {
       </div>
       
       {/* Daily Trend */}
-      <Card className="p-6 mb-6">
+      <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <TrendingUp className="w-5 h-5" />
           Daily Attendance Trend (Last 7 Days)
@@ -253,12 +253,12 @@ export function Reports() {
       </Card>
       
       {/* Top Performers */}
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">
           Student Attendance Performance (Top 10)
         </h2>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[640px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -331,10 +331,10 @@ export function Reports() {
       </Card>
 
       {/* All Attendance Records */}
-      <Card className="p-6 mt-6">
+      <Card className="p-0 sm:p-6 mt-4 sm:mt-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4">All Attendance Records</h2>
         <div className="overflow-x-auto">
-          <table className="w-full">
+          <table className="w-full min-w-[640px]">
             <thead className="bg-gray-50 border-b border-gray-200">
               <tr>
                 <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">

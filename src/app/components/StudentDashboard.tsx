@@ -76,29 +76,29 @@ export function StudentDashboard() {
   ];
 
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
           Welcome, {student?.firstName}!
         </h1>
-        <p className="text-gray-500 mt-1">
+        <p className="text-sm sm:text-base text-gray-500 mt-1">
           {student?.department} - Semester {student?.semester}
         </p>
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
         {statCards.map((stat) => {
           const Icon = stat.icon;
           return (
-            <Card key={stat.title} className="p-6">
+            <Card key={stat.title} className="p-4 sm:p-6">
               <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 mb-1">{stat.title}</p>
-                  <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                <div className="min-w-0 flex-1 mr-4">
+                  <p className="text-xs sm:text-sm text-gray-500 mb-1 truncate">{stat.title}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-gray-900">{stat.value}</p>
                 </div>
-                <div className={`w-12 h-12 ${stat.bgColor} rounded-lg flex items-center justify-center`}>
-                  <Icon className={`w-6 h-6 ${stat.textColor}`} />
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 ${stat.bgColor} rounded-lg flex items-center justify-center flex-shrink-0`}>
+                  <Icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.textColor}`} />
                 </div>
               </div>
             </Card>
@@ -122,7 +122,7 @@ export function StudentDashboard() {
       )}
 
       {/* Recent Attendance */}
-      <Card className="p-6">
+      <Card className="p-4 sm:p-6">
         <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
           <Calendar className="w-5 h-5" />
           Recent Attendance Records

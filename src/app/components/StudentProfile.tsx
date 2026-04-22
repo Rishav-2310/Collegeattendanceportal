@@ -66,17 +66,17 @@ export function StudentProfile() {
   const lateCount = attendance.filter((r) => r.status === "late").length;
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       {user?.role === "admin" && (
-        <Link to="/students" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6">
+        <Link to="/students" className="inline-flex items-center gap-2 text-sm sm:text-base text-gray-600 hover:text-gray-900 mb-4 sm:mb-6">
           <ArrowLeft className="w-4 h-4" />
           Back to Students
         </Link>
       )}
-      
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
         {/* Student Info Card */}
-        <Card className="p-6 lg:col-span-1">
+        <Card className="p-4 sm:p-6 lg:col-span-1">
           <div className="text-center">
             <div className="w-24 h-24 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <span className="text-3xl font-bold text-blue-700">
@@ -121,8 +121,8 @@ export function StudentProfile() {
         </Card>
         
         {/* Attendance Overview */}
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="p-6">
+        <div className="lg:col-span-2 space-y-4 sm:space-y-6">
+          <Card className="p-4 sm:p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Attendance Overview</h3>
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -170,12 +170,12 @@ export function StudentProfile() {
           </Card>
           
           {/* Attendance History */}
-          <Card className="p-6">
+          <Card className="p-0 sm:p-6">
             <h3 className="text-xl font-bold text-gray-900 mb-4">Attendance History</h3>
             
             {attendance.length > 0 ? (
               <div className="overflow-x-auto">
-                <table className="w-full">
+                <table className="w-full min-w-[640px]">
                   <thead className="bg-gray-50 border-b border-gray-200">
                     <tr>
                       <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">

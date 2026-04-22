@@ -115,16 +115,16 @@ export function Attendance() {
   ).length;
   
   return (
-    <div className="p-8">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold text-gray-900">Mark Attendance</h1>
-        <p className="text-gray-500 mt-1">Record student attendance for the session</p>
+    <div className="p-4 sm:p-6 lg:p-8">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Mark Attendance</h1>
+        <p className="text-sm sm:text-base text-gray-500 mt-1">Record student attendance for the session</p>
       </div>
-      
+
       {/* Session Details */}
-      <Card className="p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Session Details</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <Card className="p-4 sm:p-6 mb-4 sm:mb-6">
+        <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4">Session Details</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div>
             <Label htmlFor="date">Date</Label>
             <Input
