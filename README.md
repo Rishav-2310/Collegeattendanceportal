@@ -1,7 +1,7 @@
 
   # College Attendance Portal
 
-  Live Preview:- https://rishav-2310.github.io/Collegeattendanceportal/
+  Live Preview:- 
 
   ## Running the code
 
